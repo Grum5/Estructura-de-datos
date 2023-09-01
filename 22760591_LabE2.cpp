@@ -12,6 +12,7 @@
 
 #include<iostream>
 #include<stdlib.h>
+#include<limits>
 
 using namespace std;
 
@@ -23,6 +24,7 @@ void mostrar_datos(struct Empleados[], int);
 void ingresar_datos(struct Empleados[], int);
 void DibujarMenu();
 void verificador(struct Empleados[]);
+void pause();
 
 //-------------------------------------------------------
 //-------------------------------------------------------
@@ -46,11 +48,13 @@ struct Empleados{
 
 int main(){
   //Declaracion de variables
-  struct Empleados empleados[10]; char opcion; bool running = true;
+  struct Empleados empleados[10];
+  char opcion; 
+  bool running = true;
 
   //Ciclo principal
   while(running){
-    //system("clear");
+    system("clear");
 
     DibujarMenu();  //Dibujar menu principal
     cin >> opcion;
@@ -69,8 +73,7 @@ int main(){
       
       case '3':
         //Mostrar datos de un empleado
-        cout<<"pausa" << endl;
-
+        pause();
         break;
       
       case '4':
@@ -80,15 +83,19 @@ int main(){
       
       default:
         //Opcion no valida del menu
-        cout << "Opcion no valida" << endl;
+        
+        system("clear");
+        cout << "Opcion invalida" << endl;
+        pause();
     }
+  
   }
 
   return 0;
 
 }
 
-//Funcuiones auxiliares
+//Funciones auxiliares
 //-------------------------------------------------------
 
 void verificador(struct Empleados empleados[]){
@@ -139,7 +146,8 @@ void reporte_datos(struct Empleados empleados[]){
 
     }
   }
-  cin.get();
+  pause();
+
 }
 
 //-------------------------------------------------------
@@ -180,4 +188,16 @@ void DibujarMenu(){
   cout << "4. Salir" << endl;
   cout << "Ingrese una opcion: ";
 
+}
+
+//-------------------------------------------------------
+//-------------------------------------------------------
+
+void pause(){
+  /*Funcion para hacer un pause en ubuntu*/
+
+  // Limpiar el búfer de entrada
+  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+  cout << "Presiona Enter para continuar...";
+  cin.get();
 }
