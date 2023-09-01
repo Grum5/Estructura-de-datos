@@ -20,10 +20,10 @@ using namespace std;
 //-------------------------------------------------------
 
 void reporte_datos(struct Empleados[]);
-void mostrar_datos(struct Empleados[], int);
+void mostrar_datos(struct Empleados[]);
 void ingresar_datos(struct Empleados[], int);
 void DibujarMenu();
-void verificador(struct Empleados[]);
+void verificador_de_espacio(struct Empleados[]);
 void pause();
 
 //-------------------------------------------------------
@@ -63,7 +63,7 @@ int main(){
       
       case '1':
         //Ingresar datos del empleado
-        verificador(empleados);
+        verificador_de_espacio(empleados);
         break;
       
       case '2':
@@ -73,7 +73,7 @@ int main(){
       
       case '3':
         //Mostrar datos de un empleado
-        pause();
+        mostrar_datos(empleados);
         break;
       
       case '4':
@@ -98,7 +98,7 @@ int main(){
 //Funciones auxiliares
 //-------------------------------------------------------
 
-void verificador(struct Empleados empleados[]){
+void verificador_de_espacio(struct Empleados empleados[]){
   /*Funcion que verifica si hay datos en el registro*/
   
   system("clear");
@@ -143,6 +143,7 @@ void reporte_datos(struct Empleados empleados[]){
       cout << "Salario: " << empleados[i].salario << endl;
       cout << "Departamento: " << empleados[i].departamento << endl;
       cout << endl;
+      cout << "-------------------------------------" << endl << endl;
 
     }
   }
@@ -153,9 +154,37 @@ void reporte_datos(struct Empleados empleados[]){
 //-------------------------------------------------------
 //-------------------------------------------------------
 
-void mostrar_datos(struct Empleados empleados[], int registro){
+void mostrar_datos(struct Empleados empleados[]){
   /*Funcion que muestra los datos del empleado*/
- 
+
+  system("clear");
+  
+  int matricula;
+
+  cout << "Ingresa la matricula del empleado: ";
+  cin >> matricula;
+  
+  system("clear");
+
+  for(int i = 0; i<10; i++){
+    if(empleados[i].matricula == matricula && empleados[i].registro == true){
+      //Verificar si hay datos en el registro
+
+      cout << "Matricula: " << empleados[i].matricula << endl;
+      cout << "Nombre: " << empleados[i].nombre << endl;
+      cout << "Salario: " << empleados[i].salario << endl;
+      cout << "Departamento: " << empleados[i].departamento << endl;
+      cout << endl;
+      cout << "-------------------------------------" << endl << endl;
+      pause();
+      break;
+    }
+    else if(i == 9){
+      cout << "No se encontro ningun empleado con esa matricula" << endl;
+      pause();
+    }
+  }
+
 }
 
 //-------------------------------------------------------
