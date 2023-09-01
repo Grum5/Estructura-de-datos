@@ -46,35 +46,34 @@ struct Empleados{
 
 int main(){
   //Declaracion de variables
-  struct Empleados empleados[10]; int opcion; bool running = true;
+  struct Empleados empleados[10]; char opcion; bool running = true;
 
   //Ciclo principal
   while(running){
-    system("clear");
+    //system("clear");
 
     DibujarMenu();  //Dibujar menu principal
     cin >> opcion;
 
     switch (opcion) {
       
-      case 1:
+      case '1':
         //Ingresar datos del empleado
         verificador(empleados);
         break;
       
-      case 2:
+      case '2':
         //Mostrar reporte de datos
         reporte_datos(empleados);
         break;
       
-      case 3:
+      case '3':
         //Mostrar datos de un empleado
         cout<<"pausa" << endl;
-        system("PAUSE");
 
         break;
       
-      case 4:
+      case '4':
         //Salir del programa
         running = false;
         break;
@@ -82,7 +81,6 @@ int main(){
       default:
         //Opcion no valida del menu
         cout << "Opcion no valida" << endl;
-        system("PAUSE");
     }
   }
 
@@ -141,7 +139,7 @@ void reporte_datos(struct Empleados empleados[]){
 
     }
   }
-  system("PAUSE");
+  cin.get();
 }
 
 //-------------------------------------------------------
