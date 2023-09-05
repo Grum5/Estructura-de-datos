@@ -7,12 +7,14 @@
     c) Reportes = Imprimir todos los registros de los empleados
 
   Javier Osvaldo Perez Bretado - 22760591
-
+  
+  Programa desarrollado en ubuntu
 */
 
 #include<iostream>
 #include<stdlib.h>
 #include<limits>
+#include <string>
 
 using namespace std;
 
@@ -54,7 +56,7 @@ int main(){
 
   //Ciclo principal
   while(running){
-    system("clear");
+    system("clear"); //system("CLS"); en windows
 
     DibujarMenu();  //Dibujar menu principal
     cin >> opcion;
@@ -84,7 +86,7 @@ int main(){
       default:
         //Opcion no valida del menu
         
-        system("clear");
+        system("clear");  //system("CLS"); en windows
         cout << "Opcion invalida" << endl;
         pause();
     }
@@ -101,7 +103,7 @@ int main(){
 void verificador_de_espacio(struct Empleados empleados[]){
   /*Funcion que verifica si hay datos en el registro*/
   
-  system("clear");
+  system("clear");  //system("CLS"); en windows
 
   for(int i = 0; i<10; i++){
   
@@ -131,7 +133,7 @@ void verificador_de_espacio(struct Empleados empleados[]){
 void reporte_datos(struct Empleados empleados[]){
   /*Funcion que muestra un reporte general de los datos obtenidos*/
  
-  system("clear");
+  system("clear");  //system("CLS"); en windows
   
   for(int i = 0; i<10; i++){
     
@@ -157,14 +159,14 @@ void reporte_datos(struct Empleados empleados[]){
 void mostrar_datos(struct Empleados empleados[]){
   /*Funcion que muestra los datos del empleado*/
 
-  system("clear");
+  system("clear");  //system("CLS"); en windows
   
   int matricula;
 
   cout << "Ingresa la matricula del empleado: ";
   cin >> matricula;
   
-  system("clear");
+  system("clear");  //system("CLS"); en windows
 
   for(int i = 0; i<10; i++){
     if(empleados[i].matricula == matricula && empleados[i].registro == true){
@@ -211,9 +213,9 @@ void DibujarMenu(){
   /*Funcion que dibuja el menu principal*/
 
   cout << "MENU" << endl;
-  cout << "1. INGRESO Ingresar datos del empleado" << endl;
-  cout << "2. REPORTE Mostrar reporte de datos" << endl;
-  cout << "3. Mostrar datos de un empleado" << endl;
+  cout << "1. INGRESO | Ingresar datos de un empleado" << endl;
+  cout << "2. REPORTE | Mostrar reporte general de datos" << endl;
+  cout << "3. MOSTRAR | Mostrar datos de un empleado" << endl;
   cout << "4. Salir" << endl;
   cout << "Ingrese una opcion: ";
 
@@ -229,4 +231,6 @@ void pause(){
   cin.ignore(numeric_limits<streamsize>::max(), '\n');
   cout << "Presiona Enter para continuar...";
   cin.get();
+
 }
+
