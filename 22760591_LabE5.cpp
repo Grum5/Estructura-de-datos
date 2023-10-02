@@ -35,6 +35,7 @@ void agregar(struct node* *);   // Se manda un puntero a un puntero para poder m
 void imprimir(struct node*);
 bool existeEnLista(struct node*, int);
 void pause();
+void incrementar(struct node*);
 
 // --------------------------------------------------------------------
 // ------------------------ FUNCION PRINCIPAL -------------------------
@@ -76,6 +77,9 @@ void menuRun(struct node* *lista){
             case '3':
                 cout << "Saliendo..." << endl;
                 break;
+            case '4':
+                incrementar(*lista);
+                break;
             default:
                 cout << "Opcion invalida" << endl;
                 break;
@@ -85,6 +89,21 @@ void menuRun(struct node* *lista){
 
     }while(opcion!='3');
 
+}
+
+// --------------------------------------------------------------------
+
+void incrementar(struct node* lista_temp){
+
+    struct node* p =lista_temp;
+    if(p->sig != NULL && p != NULL){
+        p = p->sig;
+        while (p != NULL){
+            lista_temp -> data = (lista_temp -> data) + (p -> data);
+            lista_temp = lista_temp->sig;
+            p = p->sig;
+        }
+    }
 }
 
 // --------------------------------------------------------------------
