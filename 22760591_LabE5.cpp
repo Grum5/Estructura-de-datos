@@ -36,6 +36,8 @@ void imprimir(struct node*);
 bool existeEnLista(struct node*, int);
 void pause();
 void incrementar(struct node*);
+bool existeLista(struct node*);
+int eliminarUltimoNodo(struct node* *);
 
 // --------------------------------------------------------------------
 // ------------------------ FUNCION PRINCIPAL -------------------------
@@ -64,6 +66,8 @@ void menuRun(struct node* *lista){
         cout << "1. Agregar un nodo" << endl;
         cout << "2. Imprimir la lista" << endl;
         cout << "3. Salir" << endl;
+        cout << "4. Incrementar" << endl;
+        cout << "5. Eliminar ultimo nodo" << endl;
         cout << "Opcion: ";
         cin >> opcion;
 
@@ -80,6 +84,9 @@ void menuRun(struct node* *lista){
             case '4':
                 incrementar(*lista);
                 break;
+            case  '5':
+                existeLista(*lista) ? cout << "Valor eliminado: "<< eliminarUltimoNodo(lista) : cout << "La lista esta vacia";
+                break;
             default:
                 cout << "Opcion invalida" << endl;
                 break;
@@ -90,6 +97,39 @@ void menuRun(struct node* *lista){
     }while(opcion!='3');
 
 }
+
+// --------------------------------------------------------------------
+
+int eliminarUltimoNodo(struct node* *lista){
+
+    struct node* last_node = *lista;            // Nodo temporal para recorrer la lista
+
+    int valor;                                  // Variable para guardar el valor del ultimo nodo
+
+    if( last_node->sig == NULL){                // Si el nodo siguiente es NULL, significa que solo hay un nodo en la lista
+
+        valor = last_node->data;                // Se guarda el valor del nodo
+        free(last_node);                        // Se libera la memoria del nodo
+        *lista = NULL;                          // Se asigna NULL al puntero de la lista
+
+        return valor;                           // Se retorna el valor del nodo
+    }
+    else{
+
+        struct node* prev_node = NULL;              // Nodo temporal para guardar el nodo anterior
+
+        while(last_node->sig != NULL){              // Se recorre la lista hasta que el nodo siguiente sea NULL
+            prev_node = last_node;
+            last_node = last_node->sig;
+        }
+
+        valor = last_node->data;                    // Se guarda el valor del ultimo nodo
+        free(last_node);                            // Se libera la memoria del ultimo nodo
+        prev_node->sig = NULL;                      // Se asigna NULL al nodo anterior
+        return valor;                               // Se retorna el valor del ultimo nodo
+    }
+}
+
 
 // --------------------------------------------------------------------
 
@@ -107,6 +147,14 @@ void incrementar(struct node* lista_temp){
 }
 
 // --------------------------------------------------------------------
+
+bool existeLista(struct node* lista_temp){
+
+    if(lista_temp == NULL){
+        return false;
+    }
+    return true;
+}
 
 bool existeEnLista(struct node* lista_temp, int dato){
 
@@ -156,13 +204,11 @@ void agregar(struct node* *lista){
 
 }
 
-void imprimir(struct node* lista){
+void imprimir(struct node* lista_temp){
 
-    struct node* ptr_temp = lista;
-
-    while( lista != NULL){
-        cout << lista->data << endl;
-        lista = lista->sig;
+    while( lista_temp != NULL){
+        cout << lista_temp->data << endl;
+        lista_temp = lista_temp->sig;
     }
 }
 
