@@ -3,6 +3,8 @@
     y guardarlos en una lista enlazada. Verificar que los numeros
     que se guarden en la lista no se repitan
 
+        - Se han agregado las funciones de incrementar y eliminar ultimo nodo
+
     Javier Osvaldo Perez Breatdo - 22760591
 */
 
@@ -55,9 +57,7 @@ int main(){
 // ------------------------ FUNCIONES ---------------------------------
 
 void menuRun(struct node* *lista){
-    /*
-        EDITAR
-    */
+    /* Funcion que genera y gestiona el menu */
 
     char opcion;
 
@@ -101,18 +101,19 @@ void menuRun(struct node* *lista){
 // --------------------------------------------------------------------
 
 int eliminarUltimoNodo(struct node* *lista){
+    /* Funcion que elimina el ultimo nodo de la lista */
 
-    struct node* last_node = *lista;            // Nodo temporal para recorrer la lista
+    struct node* last_node = *lista;                // Nodo temporal para recorrer la lista
 
-    int valor;                                  // Variable para guardar el valor del ultimo nodo
+    int valor;                                      // Variable para guardar el valor del ultimo nodo
 
-    if( last_node->sig == NULL){                // Si el nodo siguiente es NULL, significa que solo hay un nodo en la lista
+    if( last_node->sig == NULL){                    // Si el nodo siguiente es NULL, significa que solo hay un nodo en la lista
 
-        valor = last_node->data;                // Se guarda el valor del nodo
-        free(last_node);                        // Se libera la memoria del nodo
-        *lista = NULL;                          // Se asigna NULL al puntero de la lista
+        valor = last_node->data;                    // Se guarda el valor del nodo
+        free(last_node);                            // Se libera la memoria del nodo
+        *lista = NULL;                              // Se asigna NULL al puntero de la lista
 
-        return valor;                           // Se retorna el valor del nodo
+        return valor;                               // Se retorna el valor del nodo
     }
     else{
 
@@ -134,6 +135,7 @@ int eliminarUltimoNodo(struct node* *lista){
 // --------------------------------------------------------------------
 
 void incrementar(struct node* lista_temp){
+    /* Funcion que suma el valor del nodo n por el nodo n+1 */
 
     struct node* p =lista_temp;
     if(p->sig != NULL && p != NULL){
@@ -149,6 +151,7 @@ void incrementar(struct node* lista_temp){
 // --------------------------------------------------------------------
 
 bool existeLista(struct node* lista_temp){
+    /* Comprueba que la lista existe */
 
     if(lista_temp == NULL){
         return false;
@@ -157,6 +160,7 @@ bool existeLista(struct node* lista_temp){
 }
 
 bool existeEnLista(struct node* lista_temp, int dato){
+    /* Comprueba el valor de un dato en la lista */
 
     // Se recorre la lista hasta que el puntero temporal sea NULL
     while(lista_temp != NULL){
@@ -170,6 +174,7 @@ bool existeEnLista(struct node* lista_temp, int dato){
 }
 
 void agregar(struct node* *lista){
+    /* Funcion que agrega un nuevo nodo al inicio de la lista */
 
     int dato;
 
@@ -205,6 +210,7 @@ void agregar(struct node* *lista){
 }
 
 void imprimir(struct node* lista_temp){
+    /* Funcion que imprime los datos de cada nodo */
 
     while( lista_temp != NULL){
         cout << lista_temp->data << endl;
