@@ -4,6 +4,7 @@
     que se guarden en la lista no se repitan
 
         - Se han agregado las funciones de incrementar y eliminar ultimo nodo
+        - Crear una funcion para ingresar los numeros y que se ordenen en la lista de menor a mayor
 
     Javier Osvaldo Perez Breatdo - 22760591
 */
@@ -33,13 +34,14 @@ struct node{
 // ------------------------ PROTOTIPOS --------------------------------
 
 void menuRun(struct node* *);   // Se manda un puntero a un puntero para poder modificar la lista
-void agregar(struct node* *);   // Se manda un puntero a un puntero para poder modificar la lista
+void agregar(struct node* *, int);   // Se manda un puntero a un puntero para poder modificar la lista
 void imprimir(struct node*);
 bool existeEnLista(struct node*, int);
 void pause();
 void incrementar(struct node*);
 bool existeLista(struct node*);
 int eliminarUltimoNodo(struct node* *);
+void agregarMenorMayor(struct node* *, int);
 
 // --------------------------------------------------------------------
 // ------------------------ FUNCION PRINCIPAL -------------------------
@@ -60,6 +62,7 @@ void menuRun(struct node* *lista){
     /* Funcion que genera y gestiona el menu */
 
     char opcion;
+    int dato;
 
     do{
         system("clear");
@@ -68,12 +71,15 @@ void menuRun(struct node* *lista){
         cout << "3. Salir" << endl;
         cout << "4. Incrementar" << endl;
         cout << "5. Eliminar ultimo nodo" << endl;
+        cout << "6. Agregar nodos ordenados de menor a mayor" << endl;
         cout << "Opcion: ";
         cin >> opcion;
 
         switch(opcion){
             case '1':
-                agregar(lista); // Se manda la direccion de memoria del puntero a la funcion agregar
+                cout << "Agregar dato: " << endl;
+                cin >> dato;
+                agregar(lista, dato); // Se manda la direccion de memoria del puntero a la funcion agregar
                 break;
             case '2':
                 imprimir(*lista); // Se manda el puntero a la funcion imprimir
@@ -85,7 +91,12 @@ void menuRun(struct node* *lista){
                 incrementar(*lista);
                 break;
             case  '5':
-                existeLista(*lista) ? cout << "Valor eliminado: "<< eliminarUltimoNodo(lista) : cout << "La lista esta vacia";
+                existeLista(*lista) ? cout << "Valor eliminado: "<< eliminarUltimoNodo(lista) << endl : cout << "La lista esta vacia" << endl;
+                break;
+            case '6':
+                cout << "Agregar dato: " << endl;
+                cin >> dato;
+                agregarMenorMayor(lista, dato);
                 break;
             default:
                 cout << "Opcion invalida" << endl;
@@ -159,6 +170,8 @@ bool existeLista(struct node* lista_temp){
     return true;
 }
 
+// --------------------------------------------------------------------
+
 bool existeEnLista(struct node* lista_temp, int dato){
     /* Comprueba el valor de un dato en la lista */
 
@@ -173,14 +186,10 @@ bool existeEnLista(struct node* lista_temp, int dato){
     return false; // Si el dato no existe en la lista se retorna un false
 }
 
-void agregar(struct node* *lista){
+// --------------------------------------------------------------------
+
+void agregar(struct node* *lista, int dato){
     /* Funcion que agrega un nuevo nodo al inicio de la lista */
-
-    int dato;
-
-    // Pedir el dato que se ingresara
-    cout << "Ingresa el numero deseado: ";
-    cin >> dato;
 
     if( !existeEnLista(*lista, dato) ){
 
@@ -208,6 +217,44 @@ void agregar(struct node* *lista){
     }
 
 }
+
+// --------------------------------------------------------------------
+
+void agregarMenorMayor(struct node* *lista, int dato){
+
+    if( !existeEnLista(*lista, dato) ){
+
+        if( !existeLista(*lista) ){
+            // Si la lista no existe, se genera el nodo y se asigna el dato
+            *lista = (struct node*) malloc( sizeof(struct node) );
+            (*lista)->data = dato;
+        }
+        else{
+            // Si la lista existe entonces se crea un nuevo nodo que se enlazara a la lista
+            struct node* nuevo_nodo = (struct node*) malloc( sizeof(struct node) );
+            nuevo_nodo->data = dato;
+            // Se evaluan 3 casos
+            if ( (*lista)->data > dato ){ // Si el dato es menor al primer nodo de la lista
+                nuevo_nodo->sig = *lista;
+                *lista = nuevo_nodo;
+            }
+            else{
+                struct node* lista_temp = *lista;
+                while( lista_temp->sig != NULL && lista_temp->sig->data < dato ){ // Si el dato es mayor al primer nodo de la lista
+                    lista_temp = lista_temp->sig;
+                }
+                nuevo_nodo->sig = lista_temp->sig;
+                lista_temp->sig = nuevo_nodo;
+            }
+        }
+
+    }
+    else{
+        cout << "Este valor ya existe en la lista" << endl;
+    }
+}
+
+// --------------------------------------------------------------------
 
 void imprimir(struct node* lista_temp){
     /* Funcion que imprime los datos de cada nodo */
