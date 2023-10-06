@@ -1,12 +1,9 @@
 /*
     Realizar un programa en el cual se capturen numeros enteros
     y guardarlos en una lista enlazada. Verificar que los numeros
-    que se guarden en la lista no se repitan
+    que se guarden en la lista no se repitan y se ordenen de menor a mayor
 
-        - Se han agregado las funciones de incrementar y eliminar ultimo nodo
-        - Crear una funcion para ingresar los numeros y que se ordenen en la lista de menor a mayor
-
-    Javier Osvaldo Perez Breatdo - 22760591
+    Javier Osvaldo Perez Bretado - 22760591
 */
 
 #include<iostream>
@@ -24,26 +21,12 @@ struct node{
 };
 
 // --------------------------------------------------------------------
-// -------------------- DEFINICIONES ----------------------------------
+// -------------------- PROTOTIPOS  -----------------------------------
 
-// Por el momento se comento esto ya que me causa problemas para visualizar bien el codigo
-// typedef struct node nodo;
-// typedef nodo *tipoLista;
-
-// --------------------------------------------------------------------
-// ------------------------ PROTOTIPOS --------------------------------
-
-void menuRun(struct node* *);   // Se manda un puntero a un puntero para poder modificar la lista
-void agregar(struct node* *, int);   // Se manda un puntero a un puntero para poder modificar la lista
+void menuRun(struct node* *);
 void imprimir(struct node*);
 bool existeEnLista(struct node*, int);
 void pause();
-
-// --------------------------------------------------------------------
-// ------------------------ PROTOTIPOS NUEVOS -------------------------
-
-// Se agregaron funciones nuevas al programa original
-void incrementar(struct node*); // Funcion creada en clase, no tiene un uso especifico
 bool existeLista(struct node*);
 int eliminarUltimoNodo(struct node* *);
 void agregarMenorMayor(struct node* *, int);
@@ -68,15 +51,14 @@ void menuRun(struct node* *lista){
 
     char opcion;
     int dato;
+    bool running = true;
 
     do{
         system("clear");
-        cout << "1. Agregar un nodo" << endl;
+        cout << "1. Agregar un nodo (Ordenados menor a mayor)" << endl;
         cout << "2. Imprimir la lista" << endl;
-        cout << "3. Salir" << endl;
-        cout << "4. Incrementar" << endl;
-        cout << "5. Eliminar ultimo nodo" << endl;
-        cout << "6. Agregar nodos ordenados de menor a mayor" << endl;
+        cout << "3. Eliminar ultimo nodo" << endl;
+        cout << "4. Salir" << endl;
         cout << "Opcion: ";
         cin >> opcion;
 
@@ -84,24 +66,17 @@ void menuRun(struct node* *lista){
             case '1':
                 cout << "Agregar dato: " << endl;
                 cin >> dato;
-                agregar(lista, dato); // Se manda la direccion de memoria del puntero a la funcion agregar
+                agregarMenorMayor(lista, dato); // Se manda la direccion de memoria del puntero a la funcion agregar
                 break;
             case '2':
                 imprimir(*lista); // Se manda el puntero a la funcion imprimir
                 break;
             case '3':
-                cout << "Saliendo..." << endl;
-                break;
-            case '4':
-                incrementar(*lista);
-                break;
-            case  '5':
                 existeLista(*lista) ? cout << "Valor eliminado: "<< eliminarUltimoNodo(lista) << endl : cout << "La lista esta vacia" << endl;
                 break;
-            case '6':
-                cout << "Agregar dato: " << endl;
-                cin >> dato;
-                agregarMenorMayor(lista, dato);
+            case '4':
+                cout << "Saliendo..." << endl;
+                running = false;
                 break;
             default:
                 cout << "Opcion invalida" << endl;
@@ -110,7 +85,7 @@ void menuRun(struct node* *lista){
 
         pause();
 
-    }while(opcion!='3');
+    }while(running);
 
 }
 
@@ -150,22 +125,6 @@ int eliminarUltimoNodo(struct node* *lista){
 
 // --------------------------------------------------------------------
 
-void incrementar(struct node* lista_temp){
-    /* Funcion que suma el valor del nodo n por el nodo n+1 */
-
-    struct node* p =lista_temp;
-    if(p->sig != NULL && p != NULL){
-        p = p->sig;
-        while (p != NULL){
-            lista_temp -> data = (lista_temp -> data) + (p -> data);
-            lista_temp = lista_temp->sig;
-            p = p->sig;
-        }
-    }
-}
-
-// --------------------------------------------------------------------
-
 bool existeLista(struct node* lista_temp){
     /* Comprueba que la lista existe */
 
@@ -189,38 +148,6 @@ bool existeEnLista(struct node* lista_temp, int dato){
     }
 
     return false; // Si el dato no existe en la lista se retorna un false
-}
-
-// --------------------------------------------------------------------
-
-void agregar(struct node* *lista, int dato){
-    /* Funcion que agrega un nuevo nodo al inicio de la lista */
-
-    if( !existeEnLista(*lista, dato) ){
-
-        if(lista == NULL){ // Verificar si la lista es NULL
-
-            *lista = (struct node*) malloc(sizeof(struct node)); // Se asigna memoria para el nodo
-            (*lista)->data = dato; // Se asigna el dato al nodo
-
-        }
-
-        else{ // Si la lista no es NULL, tiene un nodo por lo tanto se crea un nodo nuevo que se conecta
-
-        struct node* nodo_nuevo; // Se declara un nodo nuevo
-
-        nodo_nuevo = (struct node*) malloc(sizeof(struct node)); // Se asigna memoria para el nodo nuevo
-
-        nodo_nuevo->data = dato; // Se asigna el dato al nodo nuevo
-        nodo_nuevo->sig = *lista; // Se conecta el nodo nuevo con la lista
-        *lista = nodo_nuevo; // Se asigna el nodo nuevo como el primer nodo de la lista
-
-        }
-    }
-    else{
-        cout << "Este valor ya existe en la lista" << endl;
-    }
-
 }
 
 // --------------------------------------------------------------------
@@ -265,8 +192,11 @@ void agregarMenorMayor(struct node* *lista, int dato){
 void imprimir(struct node* lista_temp){
     /* Funcion que imprime los datos de cada nodo */
 
+    cout << endl <<"Lista:" << endl;
+    int i = 1;
+
     while( lista_temp != NULL){
-        cout << lista_temp->data << endl;
+        cout << "Nodo " << i << ": "<< lista_temp->data << endl;
         lista_temp = lista_temp->sig;
     }
 }
