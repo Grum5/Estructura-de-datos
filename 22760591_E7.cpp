@@ -166,7 +166,7 @@ void agregarMenorMayor(struct node* *lista, int dato){
             // Si la lista existe entonces se crea un nuevo nodo que se enlazara a la lista
             struct node* nuevo_nodo = (struct node*) malloc( sizeof(struct node) );
             nuevo_nodo->data = dato;
-            // Se evaluan 3 casos
+            // Se evaluan 2 casos
             if ( (*lista)->data > dato ){ // Si el dato es menor al primer nodo de la lista
                 nuevo_nodo->sig = *lista;
                 *lista = nuevo_nodo;
@@ -198,6 +198,7 @@ void imprimir(struct node* lista_temp){
     while( lista_temp != NULL){
         cout << "Nodo " << i << ": "<< lista_temp->data << endl;
         lista_temp = lista_temp->sig;
+        i++;
     }
 }
 
