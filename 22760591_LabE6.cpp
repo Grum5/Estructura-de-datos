@@ -29,6 +29,7 @@ struct node
 void agregar(struct node **, char *);
 void imprimir(struct node *);
 bool existeEnLista(struct node *, char *);
+bool existeLista(struct node*);
 void pause();
 
 // --------------------------------------------------------------------
@@ -172,6 +173,19 @@ void imprimir(struct node *lista_temp){
         }
     }
 }
+
+// --------------------------------------------------------------------
+
+bool existeLista(struct node* lista_temp){
+    /* Comprueba que la lista existe */
+
+    if(lista_temp == NULL){
+        return false;
+    }
+    return true;
+}
+
+
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
 

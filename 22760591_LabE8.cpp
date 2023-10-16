@@ -7,6 +7,7 @@
 
 #include<iostream>
 #include<stdlib.h>
+#include<limits>
 
 using namespace std;
 
@@ -21,9 +22,12 @@ struct node{
 // ------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------
 
-void concat(struct node**, struct node*);
+void concat(struct node**, struct node**);
 void agregar(struct node**, int);
 void imprimir(struct node* );
+bool existeLista(struct node*);
+void pause();
+void printMenu();
 
 // ------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------
@@ -34,29 +38,76 @@ int main(){
     // Declarar las listas
     struct node* lista1 = NULL;
     struct node* lista2 = NULL;
+    bool running = true;
+    char opcion;
+    int dato;
 
-    // Se agregan nodos a la lista 1
-    for(int i = 1; i <= 4; i++){
-        agregar(&lista1, i);
-    }
+    do{
+        printMenu();
+        cin >> opcion;
+        switch(opcion){
 
-    // Se agregan nodos a la lista 2
-    for(int i = 5; i <= 7; i++){
-        agregar(&lista2, i);
-    }
-    // Se imprime la lista 1 para ver su contenido
-    imprimir(lista1);
-    cout << endl;
+            case '1':
+                cout << "Valor a ingresar:  " << endl;
+                cin >> dato;
+                agregar(&lista1, dato);
+                break;
 
-    // Se imprime la lista 2 para ver su contenido
-    imprimir(lista2);
-    cout << endl;
+            case '2':
+                cout << "Valor a ingresar:  " << endl;
+                cin >> dato;
+                agregar(&lista2, dato);
+                break;
 
-    // Se concatenan las dos listas
-    concat(&lista1, lista2);
+            case '3':
+                if( existeLista(lista1) ){
+                    imprimir(lista1);
+                }
+                else{
+                    cout << "No existe lista 1" << endl;
+                }
+                break;
 
-    // Se imprimen los resultados
-    imprimir(lista1);
+            case '4':
+                if( existeLista(lista2) ){
+                    imprimir(lista2);
+                }
+                else{
+                    cout << "No existe lista 2" << endl;
+                }
+                break;
+
+            case '5':
+                if ( !existeLista(lista1) && !existeLista(lista2) ){
+                    cout << "No existe la lista 1 y lista 2" << endl;
+                }
+                else if( !existeLista(lista1) && existeLista(lista2) ){
+                    lista1 = lista2;
+                    lista2 = NULL;
+                    free(lista2);
+                }
+                else if( existeLista(lista1) && !existeLista(lista2) ){
+                    cout << "lista 2 no existe" << endl;
+                }
+                else if( existeLista(lista1) && existeLista(lista2) ) {
+                    concat(&lista1, &lista2);
+                }
+
+                break;
+
+            case '6':
+                running = false;
+                cout << "Saliendo..." << endl;
+                break;
+
+            default:
+                cout << "NO VALIDO" << endl;
+                break;
+        }
+
+        pause();
+
+    }while(running);
 
     return 0;
 }
@@ -64,35 +115,29 @@ int main(){
 // ------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------
 
-void concat(struct node** lista1, struct node* lista2){
+void concat(struct node** lista1, struct node** lista2){
 
-    if(*lista1 == NULL && lista2 == NULL){ // Si no existe ninguna lista
-        cout << "No existen listas" << endl;
+    struct node* ptr_temp1 = *lista1;
+    struct node* ptr_temp2 = *lista2;
 
+    // Mover puntero temporal de lista 2
+    while(ptr_temp2->sig != *lista2){
+        ptr_temp2 = ptr_temp2->sig;
     }
-    else if(lista2 != NULL && *lista1 == NULL){ // Si lista 2 existe y lista 1 NO EXISTE
-        *lista1 = lista2;
 
+    // Mover puntero temporal de lista 1
+    while(ptr_temp1->sig != *lista1){
+        ptr_temp1 = ptr_temp1->sig;
     }
 
-    else if(*lista1 != NULL && lista2 != NULL){ // Si ambas listas existen
-        struct node* ptr_temp1 = *lista1;
-        struct node* ptr_temp2 = lista2;
+    ptr_temp1->sig = *lista2;
+    ptr_temp2->sig = *lista1;
 
-        // Mover puntero temporal de lista 2
-        while(ptr_temp2->sig != lista2){
-            ptr_temp2 = ptr_temp2->sig;
-        }
+    // Dejar a lista2 apuntando a NULL
+    *lista2 = NULL;
+    // Liberar memoria de Lista2
+    free(*lista2);
 
-        // Mover puntero temporal de lista 1
-        while(ptr_temp1->sig != *lista1){
-            ptr_temp1 = ptr_temp1->sig;
-        }
-
-        ptr_temp1->sig = lista2;
-        ptr_temp2->sig = *lista1;
-
-    }
 }
 
 // ------------------------------------------------------------------------------
@@ -132,4 +177,39 @@ void imprimir(struct node* lista_temp){
         }
         cout << ptr_temp->data << endl;
     }
+}
+
+// --------------------------------------------------------------------
+
+void printMenu(){
+    system("clear");
+        cout << "1. Agregar Lista 1" << endl;
+        cout << "2. Agregar Lista 2" << endl;
+        cout << "3. Imprimir Lista 1" << endl;
+        cout << "4. Imprimir Lista 2" << endl;
+        cout << "5. Concatenar" << endl;
+        cout << "6. Salir" << endl;
+        cout << "Opcion: ";
+}
+// --------------------------------------------------------------------
+
+bool existeLista(struct node* lista_temp){
+    /* Comprueba que la lista existe */
+
+    if(lista_temp == NULL){
+        return false;
+    }
+    return true;
+}
+
+// --------------------------------------------------------------------
+// --------------------------------------------------------------------
+
+void pause(){
+    /*Funcion para hacer un pause en ubuntu*/
+
+    // Limpiar el búfer de entrada
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << "Presiona Enter para continuar...";
+    cin.get();
 }
