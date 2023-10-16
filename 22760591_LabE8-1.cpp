@@ -200,54 +200,36 @@ void concat(struct node** lista1, struct node** lista2){
 
 void eliminar(struct node** lista){
     /* Funcion que elimina los nodos que tengan el valor que se ingreso en su estructura */
-    int dato;
-
-    cout << "Ingrese el dato a eliminar: " << endl;
-    cin >> dato;
 
     if( existeLista(*lista) ){
 
-        if( (*lista)->sig == *lista && (*lista)->data == dato ){   // La lista circular solo tiene un nodo y debe eliminarse
+    int dato;
+    cout << "Ingrese el dato a eliminar: " << endl;
+    cin >> dato;
 
-            struct node* delete_node = *lista;
-            *lista = nullptr;
-            delete delete_node;
+        struct node* ptr_temp = *lista;
 
+        while( ptr_temp->sig != *lista ){
+            if( ptr_temp->sig->data == dato ){
+                struct node* delete_node = ptr_temp->sig;
+                ptr_temp->sig = ptr_temp->sig->sig;
+                delete delete_node;
+            }
+            else{
+                ptr_temp =  ptr_temp->sig;
+            }
         }
 
-        else{   // La lista circular tiene al menos 2 nodos
+        if( (*lista)->data == dato && (*lista)->sig != *lista ){  // Evaluar el primer nodo de la lista y verificar no sea el ultimo nodo
+            struct node* delete_node = ptr_temp->sig;
+            *lista = (*lista)->sig;
+            ptr_temp->sig = *lista;
+            delete delete_node;
+        }
 
-            struct node* ptr_temp = *lista;
-
-            while( ptr_temp->sig != *lista ){
-
-                if( ptr_temp->sig->data == dato ){
-
-                    struct node* delete_node = ptr_temp->sig;
-                    ptr_temp->sig = ptr_temp->sig->sig;
-                    delete delete_node;
-
-                }
-
-                else{
-                    ptr_temp =  ptr_temp->sig;
-                }
-            }
-            if( (*lista)->data == dato && (*lista)->sig != *lista ){  // Evaluar el primer nodo de la lista y verificar no sea el ultimo nodo
-
-                struct node* delete_node = ptr_temp->sig;
-                *lista = (*lista)->sig;
-                ptr_temp->sig = *lista;
-                delete delete_node;
-
-            }
-            else if( (*lista)->data == dato && (*lista)->sig == *lista ){    // Si es el ultimo nodo y se debe eliminar
-
-                *lista = nullptr;
-                delete ptr_temp;
-
-            }
-
+        else if( (*lista)->data == dato && (*lista)->sig == *lista ){    // Si es el ultimo nodo y se debe eliminar
+            *lista = nullptr;
+            delete ptr_temp;
         }
 
     }
