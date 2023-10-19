@@ -28,10 +28,9 @@ struct node{
 
 void agregarNodoDoble(struct node**, int);
 void imprimir(struct node*);
-void function(struct node**, struct node**, struct node**);
 bool existeLista(struct node*);
 void dividir( struct node**, struct node**, struct node** );
-
+void pause();
 
 // ------------------------------------------------------------------------------
 // ----------------------- FUNCION PRINCIPAL ------------------------------------
@@ -43,124 +42,125 @@ int main(){
     struct node* listaImp = nullptr;
     int dato;
 
+    // MENU
+    char opcion;
+    bool running = true;
 
-    agregarNodoDoble(&lista, 1);
-    agregarNodoDoble(&lista, 2);
-    agregarNodoDoble(&lista, 1);
-    cout << "LISTA ORIGINAL" << endl;
-    imprimir(lista);
+    do{
+        system("clear");
+        cout << "MENU" << endl;
+        cout << "1. Agregar nodo" << endl;
+        cout << "2. Imprimir lista" << endl;
+        cout << "3. Dividir lista" << endl;
+        cout << "4. Imprimir listas" << endl;
+        cout << "5. Salir" << endl;
+        cin >> opcion;
+        switch(opcion){
+            case '1':
+                cout << "Ingrese un numero: ";
+                cin >> dato;
+                agregarNodoDoble(&lista, dato);
+                break;
+            case '2':
+                imprimir(lista);
+                break;
+            case '3':
+                dividir(&lista, &listaImp, &listaPar);
+                break;
+            case '4':
+                cout << "LISTA PAR" << endl;
+                imprimir(listaPar);
+                cout << "LISTA IMPAR" << endl;
+                imprimir(listaImp);
+                cout << "LISTA ORIGINAL"<< endl;
+                imprimir(lista);
+                break;
+            case '5':
+                running = false;
+                break;
+            default:
+                cout << "Opcion no valida" << endl;
+                break;
+        }
+        pause();
+    }while(running);
 
-    // function(&lista, &listaPar, &listaImpar);
-
-    dividir(&lista, &listaImp, &listaPar);
-
-    cout << "LISTA PAR" << endl;
-    imprimir(listaPar);
-    cout << "LISTA IMPAR" << endl;
-    imprimir(listaImp);
-    cout << "LISTA ORIGINAL"<< endl;
-    imprimir(lista);
+    return 0;
 }
 
 // ------------------------------------------------------------------------------
 // ----------------------- FUNCIONES --------------------------------------------
 
-void function(struct node** lista, struct node** lista1, struct node** lista2){
-
-    struct node* ptr_temp = *lista;
-    struct node* delete_node = nullptr;
-
-    while(ptr_temp->sig != nullptr){
-        if(ptr_temp->data % 2 == 0){
-            agregarNodoDoble(lista1, ptr_temp->data);
-        }
-        else{
-            agregarNodoDoble(lista2, ptr_temp->data);
-        }
-        delete_node = ptr_temp;
-        ptr_temp = ptr_temp->sig;
-        delete delete_node;
-    }
-    if(ptr_temp->data % 2 == 0){
-        agregarNodoDoble(lista1, ptr_temp->data);
-    }
-    else{
-        agregarNodoDoble(lista2, ptr_temp->data);
-    }
-    delete_node = ptr_temp;
-    *lista = nullptr;
-    delete delete_node;
-}
-
-// ------------------------------------------------------------------------------
-
 void dividir( struct node** lista, struct node** listaImp, struct node** listaPar ){
+    /* Funcion que redirige a donde apunta cada nodo de la lista original, dejando la lista original apuntando a null */
 
-    struct node* ptr_temp = *lista;
-    struct node* last_nodePar = nullptr;
-    struct node* last_nodeImp = nullptr;
+    if( existeLista(*lista) ){ // Si existe la lista (no es null
 
-    int i = 1;
+        struct node* ptr_temp = *lista;
+        struct node* last_nodePar = nullptr;
+        struct node* last_nodeImp = nullptr;
 
-    while( ptr_temp->sig != nullptr ){
-        if( ptr_temp->data % 2 != 0 ){ // Si es impar
-           if( *listaImp == nullptr ){
-                *listaImp = ptr_temp;
-                last_nodeImp = ptr_temp;
-                ptr_temp = ptr_temp->sig;
-                (*listaImp)->sig = nullptr;
-                (*listaImp)->ant = nullptr;
-           }
-           else{
+        while( ptr_temp->sig != nullptr ){
+            if( ptr_temp->data % 2 != 0 ){ // Si es impar
+
+                if( *listaImp == nullptr ){
+                        *listaImp = ptr_temp;
+                        last_nodeImp = ptr_temp;
+                        ptr_temp = ptr_temp->sig;
+                        (*listaImp)->sig = nullptr;
+                        (*listaImp)->ant = nullptr;
+                }
+                else{
+                        ptr_temp->ant = last_nodeImp;
+                        last_nodeImp->sig = ptr_temp;
+                        last_nodeImp = last_nodeImp->sig;
+                        ptr_temp = ptr_temp->sig;
+                        last_nodeImp->sig = nullptr;
+                }
+
+            }
+            else{ // Si es par
+                if( *listaPar == nullptr ){
+                    *listaPar = ptr_temp;
+                    last_nodePar = ptr_temp;
+                    ptr_temp = ptr_temp->sig;
+                    (*listaPar)->sig = nullptr;
+                    (*listaPar)->ant = nullptr;
+                }
+                else{
+                    ptr_temp->ant = last_nodePar;
+                    last_nodePar->sig = ptr_temp;
+                    last_nodePar = last_nodePar->sig;
+                    ptr_temp = ptr_temp->sig;
+                    last_nodePar->sig = nullptr;
+                }
+            }
+
+        }
+
+        if( ptr_temp->data % 2 != 0 ){
+            if( *listaImp != nullptr){
                 ptr_temp->ant = last_nodeImp;
                 last_nodeImp->sig = ptr_temp;
-                last_nodeImp = last_nodeImp->sig;
-                ptr_temp = ptr_temp->sig;
-                last_nodeImp->sig = nullptr;
-           }
-
-        }
-        else{ // Si es par
-            if( *listaPar == nullptr ){
-                *listaPar = ptr_temp;
-                last_nodePar = ptr_temp;
-                ptr_temp = ptr_temp->sig;
-                (*listaPar)->sig = nullptr;
-                (*listaPar)->ant = nullptr;
             }
             else{
+                *listaImp = ptr_temp;
+                (*listaImp)->ant = nullptr;
+            }
+        }
+        else{
+            if( *listaPar != nullptr){
                 ptr_temp->ant = last_nodePar;
                 last_nodePar->sig = ptr_temp;
-                last_nodePar = last_nodePar->sig;
-                ptr_temp = ptr_temp->sig;
-                last_nodePar->sig = nullptr;
+            }
+            else{
+                *listaPar = ptr_temp;
+                (*listaPar)->ant = nullptr;
             }
         }
 
+        *lista = nullptr;
     }
-
-    if( ptr_temp->data % 2 != 0 ){
-        if( *listaImp != nullptr){
-            ptr_temp->ant = last_nodeImp;
-            last_nodeImp->sig = ptr_temp;
-        }
-        else{
-            *listaImp = ptr_temp;
-            (*listaImp)->ant = nullptr;
-        }
-    }
-    else{
-        if( *listaPar != nullptr){
-            ptr_temp->ant = last_nodePar;
-            last_nodePar->sig = ptr_temp;
-        }
-        else{
-            *listaPar = ptr_temp;
-            (*listaPar)->ant = nullptr;
-        }
-    }
-
-    *lista = nullptr;
 }
 
 // ------------------------------------------------------------------------------
@@ -217,4 +217,16 @@ bool existeLista(struct node* lista){
     }
     return true;
 
+}
+
+// ------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+
+void pause(){
+    /*Funcion para hacer un pause en ubuntu*/
+
+    // Limpiar el búfer de entrada
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << "Presiona Enter para continuar..." << endl;
+    cin.get();
 }
