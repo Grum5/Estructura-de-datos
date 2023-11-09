@@ -1,0 +1,243 @@
+/*
+    Realizar un programa que permita:
+        * agregar en un árbol binario nombres de personas. Si el nombre ya existe en el árbol binario, incrementar un contador en el nodo de ese nombre.
+        * Imprimir un reporte de los antecesores de un nombre ingresado en el árbol binario.
+    NOTA: Imprimir los antecesores, desde el antecesor mas cercano hasta la raíz.
+    Enviar el archivo fuente.
+
+    Javier Osvaldo Perez Bretado - 22760591
+*/
+
+#include <iostream>
+#include <stdlib.h>
+#include <limits>
+
+using namespace std;
+
+// -------------------------------------------------------------------
+// ------------------------- ESTUCTURAS ------------------------------
+
+struct node{
+    string nombre;
+    int contador = 1;
+    struct node *izq = nullptr;
+    struct node *der = nullptr;
+};
+
+// -------------------------------------------------------------------
+// ------------------------- PROTOTIPOS ------------------------------
+
+char menu();
+void agregarNodo(struct node**, string);
+string reporte(struct node*, string);
+bool existeNombre(struct node*, string);
+bool existeArbol(struct node*);
+void pause();
+
+// -------------------------------------------------------------------
+// -------------------------- MAIN -----------------------------------
+
+int main(){
+
+    // Declarar variables
+    struct node *arbol = nullptr;
+    bool running = true;
+    string nombre;
+
+
+    while(running){
+
+        system("clear");
+
+        switch( menu() ){
+
+            case '1':
+                // Agregar nombre al arbol
+                cout << "Nombre: ";
+                cin >> nombre;
+                agregarNodo(&arbol, nombre);
+                break;
+
+            case '2':
+                // Imprimir reporte
+                cout << "Nombre: ";
+                cin >> nombre;
+                cout << endl;
+
+                if( existeArbol(arbol) && existeNombre(arbol, nombre)){
+                    reporte(arbol, nombre);
+                    cout << arbol->nombre << "\t" << arbol->contador << endl;;
+
+                }
+
+                else
+                    cout << "No existe el nombre en el arbol" << endl;
+
+                break;
+
+            case '3':
+                // Salir del programa
+                running = false;
+                break;
+
+            default:
+                // Opcion no valida
+                cout << "Opcion invalida" << endl;
+                break;
+        }
+
+        pause();
+    }
+
+    return 0;
+}
+
+// -------------------------------------------------------------------
+// ------------------------- FUNCIONES -------------------------------
+
+char menu(){
+
+    char opcion;
+
+    cout << "Menu" << endl;
+    cout << "1) Agregar nombre" << endl;
+    cout << "2) Imprimir reporte" << endl;
+    cout << "3) Salir" << endl;
+    cout << "Opcion: ";
+
+    cin >> opcion;
+
+    return opcion;
+}
+
+// -------------------------------------------------------------------
+
+void agregarNodo(struct node** arbol, string nombre){
+
+    // Variable temporal para recorrer el arbol
+    bool running = true;
+
+    if( *arbol == nullptr){
+        // Si el arbol esta vacio, agregar el nodo
+        *arbol = new node;
+        (*arbol)->nombre = nombre;
+    }
+    else{
+        // Si el arbol no esta vacio, tiene al menos un nodo
+
+        // Crear un nuevo nodo
+        struct node* nuevo_nodo = new node;
+        nuevo_nodo->nombre = nombre;
+
+        // Crear un nodo temporal para recorrer el arbol
+        struct node* ptr_temp = *arbol;
+
+        // Recorrer el arbol
+        while(running){
+
+            // Si el nombre es menor que la raiz
+            if( nombre < ptr_temp->nombre ){
+
+                // Si el puntero izquierdo NO es nulo, se desplaza ptr_temp
+                if( ptr_temp->izq != nullptr ){
+                    ptr_temp = ptr_temp->izq;
+                }
+
+                // Si el puntero izquierdo es nulo, se inserta nuevo_nodo
+                else{
+                    ptr_temp->izq = nuevo_nodo;
+
+                    // Se cambia la condicion de running
+                    running = false;
+
+                }
+
+            }
+
+            // Si el nombre es mayor que la raiz
+            else if( nombre > ptr_temp->nombre ){
+
+                // Si el puntero derecho NO es nulo, se desplaza ptr_temp
+                if( ptr_temp->der != nullptr){
+                    ptr_temp = ptr_temp->der;
+                }
+
+                // Si el puntero derecho es nulo, se inserta nuevo_nodo
+                else{
+                    ptr_temp->der = nuevo_nodo;
+
+                    // Se cambia la condicion de running
+                    running = false;
+
+                }
+            }
+
+            // Si el nombre es igual que al de la raiz
+            else if( nombre == ptr_temp->nombre ){
+
+                // Se incrementa el contador del nodo raiz
+                ptr_temp->contador++;
+
+                // Se elimina la memoria usada para nuevo_nodo
+                delete nuevo_nodo;
+
+                // Se cambia la condicion de running
+                running = false;
+
+            }
+        }
+    }
+
+}
+
+// -------------------------------------------------------------------
+
+string reporte(struct node* arbol, string nombre){
+
+    if( nombre < arbol->nombre )
+        cout << reporte(arbol->izq, nombre) << "\t" << arbol->izq->contador << endl;
+
+    if( nombre > arbol->nombre )
+        cout << reporte(arbol->der, nombre) << "\t" << arbol->der->contador << endl;
+
+    return arbol->nombre;
+
+}
+
+// -------------------------------------------------------------------
+
+bool existeNombre(struct node* arbol, string nombre){
+
+    if( nombre < arbol->nombre && arbol->izq != nullptr )
+        existeNombre(arbol->izq, nombre);
+
+    else if(nombre < arbol->nombre && arbol->izq == nullptr)
+        return false;
+
+    if( nombre > arbol->nombre && arbol->der != nullptr)
+        existeNombre(arbol->der, nombre);
+
+    else if(nombre < arbol->nombre && arbol->izq == nullptr)
+        return false;
+
+    return true;
+
+}
+
+// -------------------------------------------------------------------
+
+bool existeArbol(struct node* arbol){
+
+    bool existe;
+    arbol != nullptr ? existe = true :  existe = false;
+    return existe;
+
+}
+// -------------------------------------------------------------------
+// --------------------- FUNCIONES AUXILIARES ------------------------
+
+void pause(){
+    cout << "Presione ENTER para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
