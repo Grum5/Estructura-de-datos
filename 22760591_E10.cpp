@@ -47,8 +47,10 @@ int main(){
 
     while(running){
 
+        // Realizar un clear de la screen
         system("clear");
 
+        // Ejecutar un switch que pide de opcion el retorno de la funcion menu
         switch( menu() ){
 
             case '1':
@@ -64,12 +66,14 @@ int main(){
                 cin >> nombre;
                 cout << endl;
 
+                // Si el arbol existe y existe el nombre en el arbol realizar el reporte
                 if( existeArbol(arbol) && existeNombre(arbol, nombre)){
                     reporte(arbol, nombre);
                     cout << arbol->nombre << "\t" << arbol->contador << endl;;
 
                 }
 
+                // En caso contrario imprimir que no existe
                 else
                     cout << "No existe el nombre en el arbol" << endl;
 
@@ -86,6 +90,7 @@ int main(){
                 break;
         }
 
+        // Pausar el programa hasta que se oprima Enter
         pause();
     }
 
@@ -97,16 +102,20 @@ int main(){
 
 char menu(){
 
+    // Declarar variable temporal
     char opcion;
 
+    // Imprimir el menu
     cout << "Menu" << endl;
     cout << "1) Agregar nombre" << endl;
     cout << "2) Imprimir reporte" << endl;
     cout << "3) Salir" << endl;
     cout << "Opcion: ";
 
+    // Registrar la opcion
     cin >> opcion;
 
+    // Retornar la opcion
     return opcion;
 }
 
@@ -194,12 +203,15 @@ void agregarNodo(struct node** arbol, string nombre){
 
 string reporte(struct node* arbol, string nombre){
 
+    // Si el nombre es menor al nombre de la raiz, imprimir el return de la funcion reporte y el contador del nodo hijo contador
     if( nombre < arbol->nombre )
         cout << reporte(arbol->izq, nombre) << "\t" << arbol->izq->contador << endl;
 
+    // Si el nombre es mayor al nombre de la raiz, imprimir el return de la funcion reporte y el contador del nodo hijo contador
     if( nombre > arbol->nombre )
         cout << reporte(arbol->der, nombre) << "\t" << arbol->der->contador << endl;
 
+    // Si no se cumple ninguna condicion, retornar el nombre del nodo actual (raiz)
     return arbol->nombre;
 
 }
@@ -208,18 +220,23 @@ string reporte(struct node* arbol, string nombre){
 
 bool existeNombre(struct node* arbol, string nombre){
 
+    // Si nombre es menor al nombre de la raiz y el nodo hijo izquierdo no es nulo, ejecutar de nuevo la funcion
     if( nombre < arbol->nombre && arbol->izq != nullptr )
         existeNombre(arbol->izq, nombre);
 
+    // Si nombre es menor al nombre de la raiz y el nodo hijo izquierdo es nulo, retornar false
     else if(nombre < arbol->nombre && arbol->izq == nullptr)
         return false;
 
+    // Si nombre es mayor al nombre de la raiz y el nodo hijo derecho no es nulo, ejecutar de nuevo la funcion
     if( nombre > arbol->nombre && arbol->der != nullptr)
         existeNombre(arbol->der, nombre);
 
+    // Si nombre es mayor al nombre de la raiz y el nodo hijo derecho es nulo, retornar false
     else if(nombre < arbol->nombre && arbol->izq == nullptr)
         return false;
 
+    // Si no se cumple ninguna condicion, retornar true (el nodo con el nombre existe)
     return true;
 
 }
@@ -228,8 +245,13 @@ bool existeNombre(struct node* arbol, string nombre){
 
 bool existeArbol(struct node* arbol){
 
+    //Declarar una variable temporal
     bool existe;
+
+    // Utilizar un operador ternario para saber si existe el arbol
     arbol != nullptr ? existe = true :  existe = false;
+
+    // Retornar la existencia del arbol
     return existe;
 
 }
@@ -237,7 +259,11 @@ bool existeArbol(struct node* arbol){
 // --------------------- FUNCIONES AUXILIARES ------------------------
 
 void pause(){
+    /*Funcion de pausa*/
+
     cout << "Presione ENTER para continuar...";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+
+/* Es la primera vez que comento tan bonito un codigo, que precioso codigo */
