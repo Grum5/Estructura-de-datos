@@ -265,5 +265,3 @@ void pause(){
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
-
-/* Es la primera vez que comento tan bonito un codigo, que precioso codigo */
